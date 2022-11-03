@@ -10,9 +10,10 @@ jobs:
     name: release webext
     runs-on: ubuntu-latest
     steps:
-     - uses: actions/checkout@v3
-     
-     - name: "web-ext build"
+      - name: "checkout"
+        uses: actions/checkout@v3
+
+      - name: "web-ext build"
         id: web-ext-build
         uses: kewisch/action-web-ext@v1
         with:
