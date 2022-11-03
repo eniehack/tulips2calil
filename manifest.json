@@ -1,0 +1,13 @@
+{
+  "manifest_version": 2,
+  "name": "tulips2calil",
+  "version": "1.0",
+  "description": "Adds book tracking service's link to Tulips OPAC.",
+  "content_scripts": [
+    {
+      "matches": ["https://www.tulips.tsukuba.ac.jp/opac/volume/*"],
+      "js": ["insert_link.js"]
+    }
+  ]
+
+}
