@@ -1,4 +1,9 @@
 {
+  "applications": {
+      "gecko": {
+          "id": "eniehack@outlook.jp"
+      }
+  },
   "manifest_version": 2,
   "name": "tulips2calil",
   "version": "1.0",
