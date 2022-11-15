@@ -19,10 +19,23 @@ jobs:
         with:
           cmd: build
           source: src
-          filename: "{name}-{version}.xpi"
-
-      - name: "Upload Artifact"
-        uses: actions/upload-artifact@v3
+      
+      - name: "web-ext sign"
+        id: web-ext-sign
+        uses: kewisch/action-web-ext@v1
         with:
-          name: target.xpi
-          path: ${{ steps.web-ext-build.outputs.target }}
+          cmd: sign
+          source: ${{ steps.web-ext-build.outputs.target }}
+          channel: unlisted
+          apiKey: ${{ secrets.AMO_ISSUER_KEY }}
+          apiSecret: ${{ secrets.AMO_ISSUER_SECRET }}
+          timeout: 900000
+
+      - name: "Create Release Draft"
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          generate_release_notes: true
+          draft: true
+          files: ${{ steps.web-ext-sign.outputs.target }}
