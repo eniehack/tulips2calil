@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "web-ext --config=webext.config.js build",
+    "build": "web-ext --config=webext.config.js build -s ./src",
     "lint": "web-ext lint"
   },
   "keywords": [],
