@@ -31,7 +31,7 @@ jobs:
           apiSecret: ${{ secrets.AMO_ISSUER_SECRET }}
           timeout: 900000
 
-      - name: "Upload Artifact"
+      - name: "Create Release Draft"
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
