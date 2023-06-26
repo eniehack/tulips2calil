@@ -20,7 +20,7 @@ jobs:
         run: pnpm install
 
       - name: "build"
-        run: pnpm run build
+        run: pnpm run build:rollup
       
       - name: "web-ext build"
         id: web-ext-build
