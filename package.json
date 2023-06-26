@@ -24,5 +24,6 @@
   },
   "devDependencies": {
     "tslib": "^2.5.3"
-  }
+  },
+  "packageManager": "pnpm@8.6.4"
 }
