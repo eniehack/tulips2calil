@@ -4,7 +4,7 @@ import ts from "@rollup/plugin-typescript";
 import copy from "rollup-plugin-copy";
 
 export default {
-    input: "src/insert_link.js",
+    input: "src/insert_link.ts",
     output: {
         file: "output/insert_link.js",
         format: "iife",
