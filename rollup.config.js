@@ -6,13 +6,13 @@ import copy from "rollup-plugin-copy";
 export default {
     input: "src/insert_link.js",
     output: {
-        file: "dist/insert_link.js",
+        file: "output/insert_link.js",
         format: "iife",
     },
     plugins: [
         copy({
             targets: [
-                { src: "src/manifest.json", dest: "dist"},
+                { src: "src/manifest.json", dest: "output"},
             ]
         }),
         ts(),
