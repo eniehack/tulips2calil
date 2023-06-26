@@ -3,15 +3,26 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "web-ext --config=webext.config.js build -s ./src",
-    "lint": "web-ext lint"
+    "build:firefox": "web-ext --config=webext.config.js build -s ./output",
+    "build:rollup": "rollup -c",
+    "dev": "rollup -c -w",
+    "lint:firefox": "web-ext lint"    
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "web-ext": "^7.3.1"
+    "web-ext": "^7.3.1",
+    "@rollup/plugin-commonjs": "^25.0.2",
+    "@rollup/plugin-node-resolve": "^15.1.0",
+    "@rollup/plugin-typescript": "^11.1.1",
+    "rollup": "^3.25.2",
+    "rollup-plugin-copy": "^3.4.0"
+  },
+  "devDependencies": {
+    "tslib": "^2.5.3"
   }
 }

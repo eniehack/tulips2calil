@@ -1,0 +1,18 @@
+{
+  "browser_specific_settings": {
+      "gecko": {
+          "id": "eniehack@outlook.jp"
+      }
+  },
+  "manifest_version": 2,
+  "name": "tulips2calil",
+  "version": "0.1.1",
+  "description": "Adds book tracking service's link to Tulips OPAC.",
+  "content_scripts": [
+    {
+      "matches": ["https://www.tulips.tsukuba.ac.jp/opac/volume/*"],
+      "js": ["insert_link.js"]
+    }
+  ]
+
+}
