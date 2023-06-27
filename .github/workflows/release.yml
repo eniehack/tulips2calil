@@ -27,7 +27,7 @@ jobs:
 
       - uses: montudor/action-zip@v1
         with:
-          args: unzip -qq build.zip -d output
+          args: unzip -qq build.zip
 
       - name: "web-ext build"
         id: web-ext-build
@@ -66,7 +66,7 @@ jobs:
 
       - uses: montudor/action-zip@v1
         with:
-          args: unzip -qq build.zip -d output
+          args: unzip -qq build.zip
   
       - id: packExtensionDir
         uses: cardinalby/webext-buildtools-pack-extension-dir-action@v1
