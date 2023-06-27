@@ -1,0 +1,67 @@
+name: release webext
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+
+  packing-firefox:
+    needs: [build]
+    name: packing webext (firefox)
+    runs-on: ubuntu-latest
+    steps:      
+      - name: "web-ext build"
+        id: web-ext-build
+        uses: kewisch/action-web-ext@v1
+        with:
+          cmd: build
+          source: output
+      
+      - name: "web-ext sign"
+        id: web-ext-sign
+        uses: kewisch/action-web-ext@v1
+        with:
+          cmd: sign
+          source: ${{ steps.web-ext-build.outputs.target }}
+          channel: unlisted
+          apiKey: ${{ secrets.AMO_SIGN_KEY }}
+          apiSecret: ${{ secrets.AMO_SIGN_SECRET }}
+          timeout: 900000
+  
+  packing-chrome:
+    needs: [build]
+    name: packing webext (chrome)
+    runs-on: ubuntu-latest
+    steps:
+      - name: "check version"
+        id: check-version
+        run: echo "::set-output name=version::${GITHUB_REF##*/}"
+  
+      - id: packExtensionDir
+        uses: cardinalby/webext-buildtools-pack-extension-dir-action@v1
+        with:
+          extensionDir: "./output"
+          zipFilePath: "chrome.zip"
+
+      - id: makeCRX
+        uses: cardinalby/webext-buildtools-chrome-crx-action@v2
+        with:
+          zipFilePath: "chrome.zip"
+          crxFilePath: "tulips2calil-${{ steps.variables.outputs.version }}.crx"
+          privateKey: ${{ secrets.CHROME_CRX_PRIVATE_KEY }}
+
+  release:
+    name: create release note
+    needs: [packing-firefox, packing-chrome]
+      - name: "Create Release Draft"
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          generate_release_notes: true
+          draft: true
+          files: ${{ steps.web-ext-sign.outputs.target }}
