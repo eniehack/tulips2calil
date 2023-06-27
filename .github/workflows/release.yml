@@ -4,6 +4,10 @@ on:
   push:
     tags:
       - 'v*.*.*'
+    paths:
+      - .github/workflows/release.yml
+  workflow_dispatch:
+  workflow_call:
 
 jobs:
   build:
@@ -13,7 +17,18 @@ jobs:
     needs: [build]
     name: packing webext (firefox)
     runs-on: ubuntu-latest
-    steps:      
+    outputs:
+      xpiFileName: ${{ steps.web-ext-build.outputs.target }}
+    steps:
+      - name: Download math result for build job
+        uses: actions/download-artifact@v3
+        with:
+          name: build.zip
+
+      - uses: montudor/action-zip@v1
+        with:
+          args: unzip -qq build.zip -d output
+
       - name: "web-ext build"
         id: web-ext-build
         uses: kewisch/action-web-ext@v1
@@ -31,15 +46,27 @@ jobs:
           apiKey: ${{ secrets.AMO_SIGN_KEY }}
           apiSecret: ${{ secrets.AMO_SIGN_SECRET }}
           timeout: 900000
+      
+      - name: upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          path: ${{ steps.web-ext-build.outputs.target }}
   
   packing-chrome:
     needs: [build]
     name: packing webext (chrome)
     runs-on: ubuntu-latest
+    outputs:
+      crxFileName: "${{ steps.packExtensionDir.outputs.extensionName }}-${{ steps.packExtensionDir.outputs.extensionVersion }}.crx"
     steps:
-      - name: "check version"
-        id: check-version
-        run: echo "::set-output name=version::${GITHUB_REF##*/}"
+      - name: Download math result for build job
+        uses: actions/download-artifact@v3
+        with:
+          name: build.zip
+
+      - uses: montudor/action-zip@v1
+        with:
+          args: unzip -qq build.zip -d output
   
       - id: packExtensionDir
         uses: cardinalby/webext-buildtools-pack-extension-dir-action@v1
@@ -51,12 +78,29 @@ jobs:
         uses: cardinalby/webext-buildtools-chrome-crx-action@v2
         with:
           zipFilePath: "chrome.zip"
-          crxFilePath: "tulips2calil-${{ steps.variables.outputs.version }}.crx"
+          crxFilePath: "${{ steps.packExtensionDir.outputs.extensionName }}-${{ steps.packExtensionDir.outputs.extensionVersion }}.crx"
           privateKey: ${{ secrets.CHROME_CRX_PRIVATE_KEY }}
+      
+      - name: upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          path: "${{ steps.packExtensionDir.outputs.extensionName }}-${{ steps.packExtensionDir.outputs.extensionVersion }}.crx"
 
   release:
     name: create release note
     needs: [packing-firefox, packing-chrome]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download math result for packing-firefox job
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ needs.packing-firefox.outputs.xpiFileName }}
+
+      - name: Download math result for packing-firefox job
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ needs.packing-chrome.outputs.crxFileName }}
+
       - name: "Create Release Draft"
         uses: softprops/action-gh-release@v1
         env:
@@ -64,4 +108,7 @@ jobs:
         with:
           generate_release_notes: true
           draft: true
-          files: ${{ steps.web-ext-sign.outputs.target }}
+          files: |
+            ${{ needs.packing-firefox.outputs.xpiFileName }}
+            ${{ needs.packing-chrome.outputs.crxFileName }}
+
