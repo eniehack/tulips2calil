@@ -29,13 +29,13 @@ jobs:
         run: pnpm run build:rollup
 
       - name: archive output dir
-        if: github.event.workflow == '.github/workflows/release.yml'
+        if: endsWith(github.event.workflow, 'release.yml')
         uses: montudor/action-zip@v1
         with:
           args: zip -qq -r build.zip output
 
       - name: upload artifact
-        if: github.event.workflow == '.github/workflows/release.yml'
+        if: endsWith(github.event.workflow, 'release.yml')
         uses: actions/upload-artifact@v3
         with:
           name: build.zip

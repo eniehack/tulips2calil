@@ -13,12 +13,12 @@ jobs:
   build:
     uses: ./.github/workflows/build.yml
 
-  packing-firefox:
+  packaging-firefox:
     needs: [build]
     name: packing webext (firefox)
     runs-on: ubuntu-latest
     outputs:
-      xpiFileName: ${{ steps.web-ext-build.outputs.target }}
+      xpiFileName: ${{ steps.web-ext-sign.outputs.target }}
     steps:
       - name: Download math result for build job
         uses: actions/download-artifact@v3
@@ -47,12 +47,16 @@ jobs:
           apiSecret: ${{ secrets.AMO_SIGN_SECRET }}
           timeout: 900000
       
+      - name: echo
+        run: |
+          echo ${{ steps.web-ext-sign.outputs.target }}
+      
       - name: upload artifact
         uses: actions/upload-artifact@v3
         with:
-          path: ${{ steps.web-ext-build.outputs.target }}
+          path: ${{ steps.web-ext-sign.outputs.target }}
   
-  packing-chrome:
+  packaging-chrome:
     needs: [build]
     name: packing webext (chrome)
     runs-on: ubuntu-latest
@@ -88,18 +92,18 @@ jobs:
 
   release:
     name: create release note
-    needs: [packing-firefox, packing-chrome]
+    needs: [packaging-firefox, packaging-chrome]
     runs-on: ubuntu-latest
     steps:
-      - name: Download math result for packing-firefox job
+      - name: Download math result for packaging-firefox job
         uses: actions/download-artifact@v3
         with:
-          name: ${{ needs.packing-firefox.outputs.xpiFileName }}
+          name: ${{ needs.packaging-firefox.outputs.xpiFileName }}
 
-      - name: Download math result for packing-firefox job
+      - name: Download math result for packaging-chrome job
         uses: actions/download-artifact@v3
         with:
-          name: ${{ needs.packing-chrome.outputs.crxFileName }}
+          name: ${{ needs.packaging-chrome.outputs.crxFileName }}
 
       - name: "Create Release Draft"
         uses: softprops/action-gh-release@v1
@@ -109,6 +113,5 @@ jobs:
           generate_release_notes: true
           draft: true
           files: |
-            ${{ needs.packing-firefox.outputs.xpiFileName }}
-            ${{ needs.packing-chrome.outputs.crxFileName }}
-
+            ${{ needs.packaging-firefox.outputs.xpiFileName }}
+            ${{ needs.packaging-chrome.outputs.crxFileName }}
