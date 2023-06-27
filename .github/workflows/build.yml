@@ -1,0 +1,24 @@
+name: build
+
+on:
+  push:
+    branches:
+      - trunk
+  pull_request:
+    branches:
+      - trunk
+  workflow_call:
+
+jobs:
+  build:
+    - name: "checkout"
+      uses: actions/checkout@v3
+
+    - name: "install pnpm"
+      uses: pnpm/action-setup@v2
+
+    - name: "Install dependencies"
+      run: pnpm install
+      
+    - name: "build"
+      run: pnpm run build:rollup
