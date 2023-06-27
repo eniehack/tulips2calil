@@ -1,4 +1,9 @@
 {
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "tulips2calil@eniehack.net"
+    }
+  },
   "manifest_version": 3,
   "name": "tulips2calil",
   "version": "0.1.13",
