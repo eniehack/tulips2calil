@@ -6,7 +6,7 @@
   },
   "manifest_version": 2,
   "name": "tulips2calil",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "Adds book tracking service's link to Tulips OPAC.",
   "content_scripts": [
     {
