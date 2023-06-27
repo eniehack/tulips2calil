@@ -6,7 +6,7 @@ if (info_elem !== null) {
     if (isbn !== "") {
         const node = document.createElement("p");
         const link_elem = document.createElement("a");
-        link_elem.setAttribute("href", `https://calil.jp/book/${isbn}`);
+        link_elem.setAttribute("href", `https://api.calil.jp/openurl?rft.isbn=${isbn}`);
         link_elem.setAttribute("target", "_blank");
         link_elem.setAttribute("rel", "noreferer noopener");
         link_elem.appendChild(document.createTextNode("calil"));
