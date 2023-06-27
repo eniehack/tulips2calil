@@ -1,10 +1,5 @@
 {
-  "browser_specific_settings": {
-      "gecko": {
-          "id": "eniehack@outlook.jp"
-      }
-  },
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "tulips2calil",
   "version": "0.1.11",
   "description": "Adds book tracking service's link to Tulips OPAC.",
