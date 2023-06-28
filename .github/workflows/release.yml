@@ -91,6 +91,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           path: "${{ steps.packExtensionDir.outputs.extensionName }}-${{ steps.packExtensionDir.outputs.extensionVersion }}.crx"
+          name: "${{ steps.packExtensionDir.outputs.extensionName }}-${{ steps.packExtensionDir.outputs.extensionVersion }}.crx"
 
   release:
     name: create release note
