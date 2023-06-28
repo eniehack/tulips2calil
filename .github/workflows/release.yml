@@ -18,7 +18,7 @@ jobs:
     name: packing webext (firefox)
     runs-on: ubuntu-latest
     outputs:
-      xpiFileName: ${{ steps.web-ext-sign.outputs.target }}
+      xpiFileName: ${{ steps.get-xpifilename.outputs.xpiFileName }}
     steps:
       - name: Download math result for build job
         uses: actions/download-artifact@v3
@@ -47,14 +47,16 @@ jobs:
           apiSecret: ${{ secrets.AMO_SIGN_SECRET }}
           timeout: 900000
       
-      - name: echo
+      - id: get-xpifilename
+        name: get .xpi filename
         run: |
-          echo ${{ steps.web-ext-sign.outputs.target }}
+          echo "${{ steps.web-ext-sign.outputs.target }}" | sed -s 's/.*\//xpiFileName=/' >> "$GITHUB_OUTPUT"
       
       - name: upload artifact
         uses: actions/upload-artifact@v3
         with:
           path: ${{ steps.web-ext-sign.outputs.target }}
+          name: ${{ steps.get-xpifilename.outputs.xpiFileName }}
   
   packaging-chrome:
     needs: [build]
