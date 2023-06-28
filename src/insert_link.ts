@@ -1,9 +1,9 @@
-let info_elem = document.getElementById("detailkMenu");
-if (info_elem !== null) {
-    info_elem.querySelector(".c_related_materials_panel_info");
+let sidemenu_elem = document.getElementById("detailkMenu");
+if (sidemenu_elem !== null) {
+    let info_elem = sidemenu_elem.querySelector(".c_related_materials_panel_info");
     let isbn = document.evaluate("//div[@id=\"lid_major_detail_1\"]//dt[text()=\"ISBN\"]/following-sibling::dd/p/text()", document, null, XPathResult.STRING_TYPE, null).stringValue;
 
-    if (isbn !== "") {
+    if (isbn !== "" && info_elem !== null) {
         const node = document.createElement("p");
         const link_elem = document.createElement("a");
         link_elem.setAttribute("href", `https://api.calil.jp/openurl?rft.isbn=${isbn}`);
